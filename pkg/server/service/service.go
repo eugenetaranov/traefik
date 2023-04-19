@@ -388,6 +388,7 @@ func (m *Manager) getLoadBalancer(ctx context.Context, serviceName string, servi
 			HTTPOnly: service.Sticky.Cookie.HTTPOnly,
 			Secure:   service.Sticky.Cookie.Secure,
 			SameSite: convertSameSite(service.Sticky.Cookie.SameSite),
+			MaxAge:   service.Sticky.Cookie.MaxAge,
 		}
 
 		// Sticky Cookie Value

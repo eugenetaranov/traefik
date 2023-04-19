@@ -23,6 +23,7 @@ type stickyCookie struct {
 	name     string
 	secure   bool
 	httpOnly bool
+	maxAge   int
 }
 
 // Balancer is a WeightedRoundRobin load balancer based on Earliest Deadline First (EDF).
@@ -58,6 +59,7 @@ func New(sticky *dynamic.Sticky, hc *dynamic.HealthCheck) *Balancer {
 			name:     sticky.Cookie.Name,
 			secure:   sticky.Cookie.Secure,
 			httpOnly: sticky.Cookie.HTTPOnly,
+			maxAge:   sticky.Cookie.MaxAge,
 		}
 	}
 	return balancer
@@ -216,8 +218,7 @@ func (b *Balancer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 
 	if b.stickyCookie != nil {
-		cookie := &http.Cookie{Name: b.stickyCookie.name, Value: server.name, Path: "/", HttpOnly: b.stickyCookie.httpOnly, Secure: b.stickyCookie.secure, MaxAge: 30}
-		log.WithoutContext().Debugf("Cookie: %s", cookie.String())
+		cookie := &http.Cookie{Name: b.stickyCookie.name, Value: server.name, Path: "/", HttpOnly: b.stickyCookie.httpOnly, Secure: b.stickyCookie.secure, MaxAge: b.stickyCookie.maxAge}
 		http.SetCookie(w, cookie)
 	}
 
