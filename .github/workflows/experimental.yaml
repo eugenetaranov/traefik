@@ -7,12 +7,12 @@ on:
       - v*
   pull_request:
     branches:
-      - v*
+      - '*'
 
 jobs:
 
   experimental:
-    if: github.repository == 'traefik/traefik'
+#    if: github.repository == 'traefik/traefik'
     name: Build experimental image on branch
     runs-on: ubuntu-20.04
 
